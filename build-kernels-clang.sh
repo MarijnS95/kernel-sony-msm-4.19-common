@@ -4,11 +4,8 @@
 
 export CLANG=$ANDROID_ROOT/prebuilts/clang/host/linux-x86/clang-r353983c/bin/
 
-# Cross Compiler
-CC="clang"
-
 # Build command
-BUILD_ARGS="CLANG_TRIPLE=aarch64-linux-gnu"
+BUILD_ARGS="CLANG_TRIPLE=aarch64-linux-gnu CC=clang"
 
 PATH=$CLANG:$PATH
 # source shared parts

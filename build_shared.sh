@@ -19,7 +19,8 @@ for platform in $PLATFORMS; do \
 
     case $platform in
         edo)
-            DEVICE=$EDO;
+            DEVICE=$EDO
+            SOC=kona
             DTBO="true";;
         lena)
             DEVICE=$LENA;
@@ -30,31 +31,29 @@ for platform in $PLATFORMS; do \
         (
             if [ ! $only_build_for ] || [ $device = $only_build_for ] ; then
 
-                KERNEL_TMP=$KERNEL_TMP-${device}
+                KERNEL_TMP="$KERNEL_TMP/$platform"
                 # Keep kernel tmp when building for a specific device or when using keep tmp
                 mkdir -p "${KERNEL_TMP}"
 
+                _make_cmd="make O=$KERNEL_TMP ARCH=arm64 -j$(nproc) CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-none-eabi- $BUILD_ARGS"
+
                 echo "================================================="
                 echo "Platform -> ${platform} :: Device -> $device"
-                make O="$KERNEL_TMP" ARCH=arm64 \
-                                          CROSS_COMPILE=aarch64-linux-android- \
-                                          CROSS_COMPILE_ARM32=arm-linux-androideabi- \
-                                          -j$(nproc) ${BUILD_ARGS} ${CC:+CC="${CC}"} \
-                                          aosp_${platform}_${device}_defconfig
+                $_make_cmd aosp_${platform}_${device}_defconfig
 
                 echo "The build may take up to 10 minutes. Please be patient ..."
                 echo "Building new kernel image ..."
-                make O="$KERNEL_TMP" ARCH=arm64 \
-                     CROSS_COMPILE=aarch64-linux-android- \
-                     CROSS_COMPILE_ARM32=arm-linux-androideabi- \
-                     -j$(nproc) ${BUILD_ARGS} ${CC:+CC="${CC}"}
+                $_make_cmd
 
                 echo "Copying new kernel image ..."
                 cp "$KERNEL_TMP/arch/arm64/boot/Image.gz-dtb" "$KERNEL_TOP/common-kernel/kernel-dtb-$device"
                 if [ $DTBO = "true" ]; then
                     # shellcheck disable=SC2046
                     # note: We want wordsplitting in this case.
-                    $MKDTIMG create "$KERNEL_TOP"/common-kernel/dtbo-${device}.img $(find "$KERNEL_TMP"/arch/arm64/boot/dts -name "*.dtbo")
+                    # $(find "$KERNEL_TMP"/arch/arm64/boot/dts -name "*.dtbo")
+                    _dtbo=$KERNEL_TMP/arch/arm64/boot/dts/somc/${SOC}-${platform}-${device}_generic-overlay.dtbo
+                    ls $_dtbo
+                    $MKDTIMG create "$KERNEL_TOP"/common-kernel/dtbo-${device}.img $_dtbo
                 fi
 
             fi

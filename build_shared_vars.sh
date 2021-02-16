@@ -54,7 +54,5 @@ MKDTIMG=$ANDROID_ROOT/prebuilts/misc/linux-x86/libufdt/mkdtimg
 
 KERNEL_TOP=$ANDROID_ROOT/kernel/sony/msm-4.19
 # $KERNEL_TMP sub dir per script
-KERNEL_TMP=$ANDROID_ROOT/out/${0##*-}/kernel-tmp
-
-export PATH=$PATH:$ANDROID_ROOT/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/bin
-export PATH=$PATH:$ANDROID_ROOT/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin
+# KERNEL_TMP=$ANDROID_ROOT/out/${0##*-}/kernel-tmp
+KERNEL_TMP=$ANDROID_ROOT/out/kernel-4.19/gcc
