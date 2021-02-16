@@ -49,7 +49,8 @@ LENA="pdx213"
 PLATFORMS="edo lena"
 
 # Mkdtimg tool
-MKDTIMG=$ANDROID_ROOT/out/host/linux-x86/bin/mkdtimg
+# MKDTIMG=$ANDROID_ROOT/out/host/linux-x86/bin/mkdtimg
+MKDTIMG=$ANDROID_ROOT/prebuilts/misc/linux-x86/libufdt/mkdtimg
 
 KERNEL_TOP=$ANDROID_ROOT/kernel/sony/msm-4.19
 # $KERNEL_TMP sub dir per script
